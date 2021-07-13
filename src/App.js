@@ -1,24 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import {fetchUtils,Admin,Resource} from 'react-admin';
+import simpleRestProvider from 'ra-data-simple-rest';
+import PostList from './PostList';
+
+const httpClient = (url, options = {}) => {
+  
+  if (!options.headers) {
+      options.headers = new Headers({ Accept: 'application/json' });
+  }
+  // add your own headers here
+  options.headers.set('X-Custom-Header', 'foobar');
+  return fetchUtils.fetchJson(url, options);
+}
+const dataProvider = simpleRestProvider('https://meemshop.herokuapp.com/api/v1', httpClient);
+
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Admin dataProvider={dataProvider}>
+        <Resource name="products" list={PostList}/>    
+    </Admin>
   );
 }
 
